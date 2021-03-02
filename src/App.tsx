@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import widgets from "./mock-data/widgets";
 import people from "./mock-data/people";
 import genericSearch from './utils/genericSearch';
-
+import { SearchInput } from './components/SearchInput';
 
 function App() {
-  const query = ''
+  const [query, setQuery] = useState<string>("")
   return (
     <>
+      <SearchInput setSearchQuery={setQuery} />
+
       <h2>Widgets:</h2>
 
       {widgets.filter((widget) => genericSearch(
@@ -16,7 +18,7 @@ function App() {
         query,
         false
       )).map(widget => {
-        return <h3>{widget.title}</h3>
+        return <h4>{widget.title}</h4>
       })}
 
       <h2>People:</h2>
@@ -28,7 +30,7 @@ function App() {
           false
         ))
         .map(person => {
-          return <h3>{person.firstName} {person.lastName}</h3>
+          return <h4>{person.firstName} {person.lastName}</h4>
         })}
 
     </>
