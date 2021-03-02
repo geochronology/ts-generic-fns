@@ -8,7 +8,13 @@ function App() {
   const [query, setQuery] = useState<string>("")
   return (
     <>
-      <SearchInput setSearchQuery={setQuery} />
+      <SearchInput
+        setSearchQuery={query => {
+          console.log("I'm firing!")
+          setQuery(query)
+        }}
+
+      />
 
       <h2>Widgets:</h2>
 
