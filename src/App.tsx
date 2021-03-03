@@ -10,6 +10,7 @@ import { Sorters } from './components/Sorters';
 import IPerson from './interfaces/IPerson';
 import { WidgetRenderer } from './components/renderers/WidgetRenderer';
 import { PeopleRenderer } from './components/renderers/PeopleRenderer';
+import genericFilter from './utils/genericFilter';
 
 function App() {
   const [query, setQuery] = useState<string>("")
@@ -17,9 +18,11 @@ function App() {
   const [widgetSortProperty, setWidgetSortProperty] = useState<IProperty<IWidget>>(
     { property: "title", isDescending: true }
   )
+  const [widgetFilterProperties, setWidgetFilterProperties] = useState<Array<keyof IWidget>>([])
   const [peopleSortProperty, setPeopleSortProperty] = useState<IProperty<IPerson>>(
     { property: "firstName", isDescending: true }
   )
+  const [peopleFilterProperties, setPeopleFilterProperties] = useState<Array<keyof IPerson>>([])
   const buttonText = showPeople ? "Show widgets" : "Show people"
 
   return (
@@ -43,12 +46,12 @@ function App() {
             object={widgets[0]}
           />
           {widgets
-            .filter((widget) => genericSearch(
-              widget,
-              ["title", "description"],
-              query,
-              false
-            ))
+            .filter((widget) =>
+              genericSearch(widget, ["title", "description"], query, false)
+            )
+            .filter((widget) =>
+              genericFilter(widget, widgetFilterProperties)
+            )
             .sort((a, b) =>
               genericSort(a, b, widgetSortProperty)
             )
@@ -75,6 +78,9 @@ function App() {
               query,
               false
             ))
+            .filter((person) =>
+              genericFilter(person, peopleFilterProperties)
+            )
             .sort((a, b) => genericSort(a, b, peopleSortProperty))
             .map(person => {
               return <PeopleRenderer {...person} />
